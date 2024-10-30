@@ -17,14 +17,37 @@
 ## 实现方案
 
 核心：维护一个列表，根据列表以及输入来进行动作的输出
+```c++
+struct PillSchedule{
+    int hour;    // 小时
+    int minute;  // 分钟
+    int amount;  // 一次吃的数量
+};
+
+// 列表中的药品信息结构
+struct Pill {
+    int pillBoxID;  // 药盒编号
+    String pillType;
+    PillSchedule pillSchedule[4];  // 吃药时间表
+    bool lastTaken = true;  // 上次是否已吃
+    PillSchedule nextTakeTime;  // 下次吃药时间
+    PillSchedule nextReminderTime;  // 下次提醒时间
+};
+
+// 全局药品列表
+Pill Pills[8];
+```
+
+
 
 列表内容：
 
-|      | 药盒编号 | 药盒中药的种类 | 吃药时间表 | 上次是否已吃 | 下次出药时间 | 下次提醒时间 |
-| ---- | -------- | -------------- | ---------- | ------------ | ------------ | ------------ |
-|      |          |                |            |              |              |              |
+|          | 药盒编号pillBoxID | 药盒中药的种类pillType | 吃药时间表pillSchedule[4]       | 上次是否已吃lastTaken | 下次出药时间netTakeTime | 下次提醒时间nextReminderTime |
+| -------- | ----------------- | ---------------------- | ------------------------------- | --------------------- | ----------------------- | ---------------------------- |
+| 数据类型 | int               | string                 | PillSchedule{int, int, int}数组 | bool                  | PillSchedule            | PillSchedule                 |
+| 说明     | 数组下标+1        |                        | 小时，分钟，一次吃的数量        |                       |                         |                              |
 
-- 在规定时间内没有吃药时进行提醒：用计时器Timer计时，如果达到了列表中任意元素的下次提醒时间则进行提醒
+- 在规定时间内没有吃药时进行提醒：用RTC计时，如果达到了列表中任意元素的下次提醒时间则进行提醒
 
   - 下次提醒时间：根据吃药频率计算提醒时间，如果上次未吃隔较短时间（如10min）后进行持续提醒
 
@@ -59,5 +82,4 @@
 
 
 
-... 待补充666
-
+... 待补充
