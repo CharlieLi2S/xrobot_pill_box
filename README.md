@@ -81,8 +81,9 @@ Pill Pills[8];
     - 吸取：函数pick_pill(int pill_number)，其中pill_number是要取出的数量，要求控制气泵和滑轨从待取位置进行pill_number次吸取动作
 
 ### 通信模块
-设计中可以使用serial或wifi进行通信，通过`useSerial`和`useWifi`两个变量控制是否启用。
-接收到的信息通过`handleSerialInput`和`handleWifiInput`进行处理，将接收到的字符串传给`handleCommand`函数进行处理，目前可供使用的指令如下：
+设计中可以使用serial或wifi进行通信，通过`useSerial`和`useWifi`两个变量控制是否启用。  
+使用WIFI时，连接到mqtt服务器。mqtt服务器接受信息时会调用回调函数`mqttCallback`,串口消息则通过在`loop`中调用`handleSerialInput`进行处理。  
+接收到的字符串传给`handleCommand`函数进行处理，目前可供使用的指令如下：
 
 | 指令       | 功能                              | 示例                                             |
 |------------|-----------------------------------|-------------------------------------------------|
