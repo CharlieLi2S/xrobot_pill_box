@@ -14,11 +14,11 @@
 
 // 设置MQTT broker信息
 const char *mqtt_broker = "broker-cn.emqx.io";
-const char *topic = "mqtt_hbb_example";
-const char *mqtt_username = "emqx";
-const char *mqtt_password = "public";
+const char *topic = "xrobot/pill_box";
+const char *mqtt_username = "xrobot";
+const char *mqtt_password = "xrobot";
 const int mqtt_port = 1883;
-const char *client_id = "mqtt-client-hbb-example";
+const char *client_id = "xrobot";
 
 WiFiClient espClient;
 PubSubClient client(espClient);
