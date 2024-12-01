@@ -62,7 +62,7 @@ struct Pill {
 };
 
 Pill Pills[8];
-bool havePill[8] = {1, 1, 0, 0, 0, 0, 0, 0};
+bool havePill[8];
 
 // 初始化药品列表
 void initPillList() {
@@ -71,6 +71,12 @@ void initPillList() {
 
     Pills[0] = Pill(1, "A药", scheduleA, false, {8, 0, 2}, {8, 0});
     Pills[1] = Pill(2, "B药", scheduleB, false, {6, 0, 1}, {6, 0});
+
+    for (int i = 0; i < 8; i++) {
+        havePill[i] = 0;  // 初始化为0
+    }
+    havePill[0] = 1;  // 如果需要某些特定的初始值，可以单独设置
+    havePill[1] = 1;
 }
 
 // 显示当前药品列表
@@ -196,7 +202,7 @@ void handleSerialInput() {
     }
 }
 
-void IRAM_ATTR pillTaken() {
+void IRAM_ATTR pillTaken() { //TODO: 还没写中断
     for (int i = 0; i < 8; i++) {
         Pills[i].lastTaken = true;
     }
@@ -244,10 +250,10 @@ void sendReminder(String pillType) {
     logMessage("提醒：" + pillType + " 的服药时间到了！");
 }
 
-bool timerCallback(void* param) {
-    checkPills();
-    return true;
-}
+// bool timerCallback(void* param) {
+//     checkPills();
+//     return true;
+// }
 
 void handleClient() {
     // TODO: 处理APP交互
@@ -370,10 +376,14 @@ void setup() {
         logMessage("网络或MQTT初始化失败，进入离线模式");
     }
 
-    // 定时器初始化
-    if (timer.attachInterruptInterval(REMINDER_INTERVAL, timerCallback)) {
-        logMessage("定时器启动成功");
-    } else {
-        logMessage("定时器启动失败");
-    }
+    // 设置传感器引脚为外部中断源
+    pinMode(PILL_SENSOR_PIN, INPUT_PULLUP);  // 设置引脚为输入，并启用上拉电阻
+    attachInterrupt(digitalPinToInterrupt(PILL_SENSOR_PIN), pillTaken, FALLING);  // 当引脚信号为LOW时触发中断
+    
+    // // 定时器初始化
+    // if (timer.attachInterruptInterval(REMINDER_INTERVAL, timerCallback)) {
+    //     logMessage("定时器启动成功");
+    // } else {
+    //     logMessage("定时器启动失败");
+    // }
 }
